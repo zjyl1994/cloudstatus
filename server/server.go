@@ -9,9 +9,12 @@ import (
 	"syscall"
 	"time"
 
+	slogGorm "github.com/orandin/slog-gorm"
+	"github.com/robfig/cron/v3"
 	"github.com/spf13/cobra"
 	"github.com/zjyl1994/cloudstatus/infra/define"
 	"github.com/zjyl1994/cloudstatus/infra/vars"
+	"github.com/zjyl1994/cloudstatus/service/record"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -28,6 +31,12 @@ func Server(cmd *cobra.Command, args []string) {
 	}
 
 	vars.Listen, err = cmd.Flags().GetString("listen")
+	if err != nil {
+		slog.Error("Error", slog.String("err", err.Error()))
+		return
+	}
+
+	vars.NodeAliveTimeout, err = cmd.Flags().GetInt("alive")
 	if err != nil {
 		slog.Error("Error", slog.String("err", err.Error()))
 		return
@@ -61,7 +70,10 @@ func Server(cmd *cobra.Command, args []string) {
 		slog.Error("Error", slog.String("err", err.Error()))
 		return
 	}
-	vars.DB, err = gorm.Open(sqlite.Open(dbFile), &gorm.Config{})
+	gormLogger := slogGorm.New()
+	vars.DB, err = gorm.Open(sqlite.Open(dbFile), &gorm.Config{
+		Logger: gormLogger,
+	})
 	if err != nil {
 		slog.Error("Open database", slog.String("err", err.Error()))
 		return
@@ -76,7 +88,16 @@ func Server(cmd *cobra.Command, args []string) {
 		slog.Error("Database migrate", slog.String("err", err.Error()))
 		return
 	}
-
+	// clean data
+	cleanDataFn := func() {
+		if err = record.CleanRecord(); err != nil {
+			slog.Error("Measure data clean", slog.String("err", err.Error()))
+		}
+	}
+	cronInstance := cron.New()
+	cronInstance.AddFunc("@daily", cleanDataFn)
+	cronInstance.Start()
+	cleanDataFn()
 	// run web server
 	webErrCh := make(chan error, 1)
 	go func(ch chan error) {
@@ -98,6 +119,9 @@ func Server(cmd *cobra.Command, args []string) {
 	case sig := <-sigChan:
 		if sig == syscall.SIGINT || sig == syscall.SIGTERM {
 			slog.Info("Signal receive", slog.String("singal", sig.String()))
+
+			cronInstance.Stop()
+
 			if vars.App != nil {
 				ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 				defer cancel()

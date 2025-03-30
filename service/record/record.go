@@ -1,6 +1,8 @@
 package record
 
 import (
+	"time"
+
 	"github.com/zjyl1994/cloudstatus/infra/define"
 	"github.com/zjyl1994/cloudstatus/infra/vars"
 	"gorm.io/gorm"
@@ -49,4 +51,39 @@ func GetNetTraffic() ([]define.TrafficCalcResult, error) {
 		Group("node_id").
 		Find(&results).Error
 	return results, err
+}
+
+func CleanRecord() error {
+	validNodeMap := make(map[string]struct{})
+	for _, node := range vars.Nodes {
+		validNodeMap[node.ID] = struct{}{}
+	}
+	validNodes := make([]string, 0, len(validNodeMap))
+	for node := range validNodeMap {
+		validNodes = append(validNodes, node)
+	}
+	currentDayInMonth := time.Now().Day()
+	return vars.DB.Transaction(func(tx *gorm.DB) error {
+		err := tx.Where("node_id NOT IN ?", validNodes).Delete(&define.MeasureRecord{}).Error
+		if err != nil {
+			return err
+		}
+		err = tx.Where("node_id NOT IN ?", validNodes).Delete(&define.TemperatureRecord{}).Error
+		if err != nil {
+			return err
+		}
+		for _, node := range vars.Nodes {
+			if node.ResetDay == currentDayInMonth {
+				err = tx.Where("node_id =?", node.ID).Delete(&define.MeasureRecord{}).Error
+				if err != nil {
+					return err
+				}
+				err = tx.Where("node_id = ?", node.ID).Delete(&define.TemperatureRecord{}).Error
+				if err != nil {
+					return err
+				}
+			}
+		}
+		return nil
+	})
 }

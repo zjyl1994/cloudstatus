@@ -7,10 +7,11 @@ import (
 )
 
 var (
-	DebugMode bool
-	App       *fiber.App
-	DB        *gorm.DB
-	Token     string
-	Listen    string
-	Nodes     []define.ServerNode
+	DebugMode        bool
+	App              *fiber.App
+	DB               *gorm.DB
+	Token            string
+	Listen           string
+	Nodes            []define.ServerNode
+	NodeAliveTimeout int
 )

@@ -58,6 +58,8 @@ func Client(cmd *cobra.Command, args []string) {
 
 		samples.NodeID = nodeId
 
+		slog.Debug("Measure", slog.Any("data", samples))
+
 		bJson, err := json.Marshal(samples)
 		if err != nil {
 			slog.Error("Marshal error", slog.String("err", err.Error()))

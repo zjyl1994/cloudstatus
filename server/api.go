@@ -66,13 +66,22 @@ func handleOverview(c *fiber.Ctx) error {
 		for _, node := range vars.Nodes {
 			stat, ok := statCache.Get(node.ID)
 			if !ok {
+				result = append(result, define.StatExchangeFormat{
+					NodeID:    node.ID,
+					NodeName:  node.Name,
+					NodeAlive: false,
+				})
 				continue
 			}
+
+			stat.NodeName = node.Name
+			stat.NodeAlive = (time.Now().Unix() - stat.ReportTime) < int64(vars.NodeAliveTimeout)
 
 			if td, ok := tm[node.ID]; ok {
 				stat.Network.Send = td.NetSend
 				stat.Network.Recv = td.NetRecv
 			}
+
 			result = append(result, stat)
 		}
 

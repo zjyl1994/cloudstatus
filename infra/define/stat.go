@@ -31,6 +31,8 @@ type StatExchangeFormat struct {
 	Interval    uint64             `json:"interval"`
 	ReportTime  int64              `json:"report"`
 	Temperature map[string]float64 `json:"temperature"`
+	NodeName    string             `json:"node_name"`
+	NodeAlive   bool               `json:"node_alive"`
 }
 
 type UsageStat struct {
