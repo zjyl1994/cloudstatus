@@ -73,13 +73,13 @@ func handleOverview(c *fiber.Ctx) error {
 			if !ok {
 				result = append(result, define.StatExchangeFormat{
 					NodeID:    node.ID,
-					NodeName:  node.Name,
+					Metadata:  node,
 					NodeAlive: false,
 				})
 				continue
 			}
 
-			stat.NodeName = node.Name
+			stat.Metadata = node
 			stat.NodeAlive = (time.Now().Unix() - stat.ReportTime) < int64(vars.NodeAliveTimeout)
 
 			// set monthly traffic data

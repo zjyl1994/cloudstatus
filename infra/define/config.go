@@ -7,7 +7,7 @@ type ServerConfig struct {
 
 type ServerNode struct {
 	ID       string `json:"id"`
-	Name     string `json:"name"`
+	Label    string `json:"label"`
 	Location string `json:"location"`
 	ResetDay int    `json:"reset_day"`
 }
