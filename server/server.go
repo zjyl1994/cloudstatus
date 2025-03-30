@@ -83,7 +83,7 @@ func Server(cmd *cobra.Command, args []string) {
 		slog.Error("Switch to WAL", slog.String("err", err.Error()))
 		return
 	}
-	err = vars.DB.AutoMigrate(&define.MeasureRecord{}, &define.TemperatureRecord{})
+	err = vars.DB.AutoMigrate(&define.MeasureRecord{})
 	if err != nil {
 		slog.Error("Database migrate", slog.String("err", err.Error()))
 		return

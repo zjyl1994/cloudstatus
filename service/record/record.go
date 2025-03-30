@@ -1,6 +1,7 @@
 package record
 
 import (
+	"encoding/json"
 	"time"
 
 	"github.com/zjyl1994/cloudstatus/infra/define"
@@ -9,39 +10,30 @@ import (
 )
 
 func WriteRecord(def *define.StatExchangeFormat) error {
-	return vars.DB.Transaction(func(tx *gorm.DB) error {
-		var measure define.MeasureRecord
-		measure.NodeID = def.NodeID
-		measure.Timestamp = def.ReportTime
-		measure.CPU = def.Percent.CPU
-		measure.Memory = def.Percent.Mem
-		measure.Swap = def.Percent.Swap
-		measure.Disk = def.Percent.Disk
-		measure.Load1 = def.Load.Load1
-		measure.Load5 = def.Load.Load5
-		measure.Load15 = def.Load.Load15
-		measure.DiskRx = def.Disk.Rx
-		measure.DiskWx = def.Disk.Wx
-		measure.NetRx = def.Network.Rx
-		measure.NetTx = def.Network.Tx
-		measure.NetSend = def.Network.Send
-		measure.NetRecv = def.Network.Recv
-		err := tx.Create(&measure).Error
-		if err != nil {
-			return err
-		}
+	var measure define.MeasureRecord
+	measure.NodeID = def.NodeID
+	measure.Timestamp = def.ReportTime
+	measure.CPU = def.Percent.CPU
+	measure.Memory = def.Percent.Mem
+	measure.Swap = def.Percent.Swap
+	measure.Disk = def.Percent.Disk
+	measure.Load1 = def.Load.Load1
+	measure.Load5 = def.Load.Load5
+	measure.Load15 = def.Load.Load15
+	measure.DiskRx = def.Disk.Rx
+	measure.DiskWx = def.Disk.Wx
+	measure.NetRx = def.Network.Rx
+	measure.NetTx = def.Network.Tx
+	measure.NetSend = def.Network.Send
+	measure.NetRecv = def.Network.Recv
 
-		ts := make([]define.TemperatureRecord, 0, len(def.Temperature))
-		for name, temp := range def.Temperature {
-			ts = append(ts, define.TemperatureRecord{
-				NodeID:      def.NodeID,
-				Timestamp:   def.ReportTime,
-				Name:        name,
-				Temperature: temp,
-			})
-		}
-		return tx.CreateInBatches(ts, len(ts)).Error
-	})
+	tempJson, err := json.Marshal(def.Temperature)
+	if err != nil {
+		return err
+	}
+	measure.Temperature = string(tempJson)
+
+	return vars.DB.Create(&measure).Error
 }
 
 func GetNetTraffic() ([]define.TrafficCalcResult, error) {
@@ -68,17 +60,9 @@ func CleanRecord() error {
 		if err != nil {
 			return err
 		}
-		err = tx.Where("node_id NOT IN ?", validNodes).Delete(&define.TemperatureRecord{}).Error
-		if err != nil {
-			return err
-		}
 		for _, node := range vars.Nodes {
 			if node.ResetDay == currentDayInMonth {
-				err = tx.Where("node_id =?", node.ID).Delete(&define.MeasureRecord{}).Error
-				if err != nil {
-					return err
-				}
-				err = tx.Where("node_id = ?", node.ID).Delete(&define.TemperatureRecord{}).Error
+				err = tx.Where("node_id = ?", node.ID).Delete(&define.MeasureRecord{}).Error
 				if err != nil {
 					return err
 				}
@@ -86,4 +70,11 @@ func CleanRecord() error {
 		}
 		return nil
 	})
+}
+
+func LoadRecord(nodeId string, startTime, endTime int64) ([]define.MeasureRecord, error) {
+	var records []define.MeasureRecord
+	err := vars.DB.Where("node_id = ? AND timestamp >= ? AND timestamp <= ?", nodeId, startTime, endTime).
+		Order("timestamp desc").Limit(1000).Find(&records).Error
+	return records, err
 }
