@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/zjyl1994/cloudstatus/infra/vars"
 )
 
@@ -10,6 +11,7 @@ func Start(listen string) error {
 		DisableStartupMessage: true,
 	})
 	vars.App = app
+	app.Use(cors.New())
 
 	apiG := app.Group("/api")
 	{
