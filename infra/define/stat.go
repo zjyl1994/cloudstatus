@@ -27,6 +27,7 @@ type StatExchangeFormat struct {
 	} `json:"network"`
 	Uptime      uint64             `json:"uptime"`
 	Hostname    string             `json:"hostname"`
+	NodeID      string             `json:"node_id"`
 	Interval    uint64             `json:"interval"`
 	ReportTime  int64              `json:"report"`
 	Temperature map[string]float64 `json:"temperature"`

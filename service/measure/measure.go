@@ -1,4 +1,4 @@
-package main
+package measure
 
 import (
 	"strings"
@@ -23,7 +23,7 @@ var (
 	lastNetworkRecv            uint64
 )
 
-func Measure(interval time.Duration) (*define.StatExchangeFormat, error) {
+func Measure(interval time.Duration, useSensors bool) (*define.StatExchangeFormat, error) {
 	var result define.StatExchangeFormat
 	// CPU Percent
 	if percent, err := cpu.Percent(interval, false); err == nil {
@@ -119,9 +119,12 @@ func Measure(interval time.Duration) (*define.StatExchangeFormat, error) {
 	result.ReportTime = now
 
 	// temperature
-	if temperatures, err := sensors.Get(); err == nil {
-		result.Temperature = temperatures
+	if useSensors {
+		if temperatures, err := sensors.Get(); err == nil {
+			result.Temperature = temperatures
+		}
 	}
+
 	return &result, nil
 }
 
