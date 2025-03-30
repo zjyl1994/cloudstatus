@@ -6,7 +6,9 @@ import (
 )
 
 func Start(listen string) error {
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		DisableStartupMessage: true,
+	})
 	vars.App = app
 
 	apiG := app.Group("/api")

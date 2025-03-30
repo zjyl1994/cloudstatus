@@ -1,11 +1,14 @@
 module github.com/zjyl1994/cloudstatus
 
-go 1.22.2
+go 1.23.0
+
+toolchain go1.23.7
 
 require (
 	github.com/gofiber/fiber/v2 v2.52.6
 	github.com/shirou/gopsutil/v4 v4.25.2
 	github.com/spf13/cobra v1.9.1
+	golang.org/x/sync v0.12.0
 	gorm.io/driver/sqlite v1.5.7
 	gorm.io/gorm v1.25.12
 )
