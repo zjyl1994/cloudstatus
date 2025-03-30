@@ -47,9 +47,6 @@ func Measure(interval time.Duration) (*define.StatExchangeFormat, error) {
 	result.Disk.Read = (readBytes - lastDiskRead) / duration
 	result.Disk.Write = (writeBytes - lastDiskWrite) / duration
 
-	result.Disk.Read = readBytes
-	result.Disk.Write = writeBytes
-
 	lastDiskRead = readBytes
 	lastDiskWrite = writeBytes
 
