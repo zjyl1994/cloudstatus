@@ -13,6 +13,15 @@ import (
 )
 
 func Client(cmd *cobra.Command, args []string) {
+	debugMode, err := cmd.Flags().GetBool("debug")
+	if err != nil {
+		slog.Error("Error", slog.String("err", err.Error()))
+		return
+	}
+	if debugMode {
+		slog.SetLogLoggerLevel(slog.LevelDebug)
+	}
+
 	reportUrl, err := cmd.Flags().GetString("report")
 	if err != nil {
 		slog.Error("Error", slog.String("err", err.Error()))

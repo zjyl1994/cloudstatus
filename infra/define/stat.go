@@ -16,14 +16,14 @@ type StatExchangeFormat struct {
 	Swap   UsageStat `json:"swap"`
 	Disk   struct {
 		UsageStat
-		Read  uint64 `json:"read"`
-		Write uint64 `json:"write"`
+		Rx uint64 `json:"rx"`
+		Wx uint64 `json:"wx"`
 	} `json:"disk"`
 	Network struct {
 		Rx   uint64 `json:"rx"`
 		Tx   uint64 `json:"tx"`
-		Send uint64 `json:"send"`
-		Recv uint64 `json:"recv"`
+		Send uint64 `json:"sb"`
+		Recv uint64 `json:"rb"`
 	} `json:"network"`
 	Uptime      uint64             `json:"uptime"`
 	Hostname    string             `json:"hostname"`

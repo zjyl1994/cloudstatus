@@ -25,3 +25,5 @@ go.work.sum
 .env
 
 cloudstatus
+cloudstatus.*
+config.json

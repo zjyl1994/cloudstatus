@@ -16,4 +16,5 @@ func init() {
 	rootCmd.AddCommand(serverCmd)
 	serverCmd.Flags().String("config", "config.json", "Config file")
 	serverCmd.Flags().String("listen", "127.0.0.1:10567", "Server listen address")
+	serverCmd.Flags().String("db", "cloudstatus.db", "Database file")
 }
