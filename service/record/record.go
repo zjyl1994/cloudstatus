@@ -75,6 +75,6 @@ func CleanRecord() error {
 func LoadRecord(nodeId string, startTime, endTime int64) ([]define.MeasureRecord, error) {
 	var records []define.MeasureRecord
 	err := vars.DB.Where("node_id = ? AND timestamp >= ? AND timestamp <= ?", nodeId, startTime, endTime).
-		Order("timestamp desc").Limit(1000).Find(&records).Error
+		Order("timestamp desc").Limit(10000).Find(&records).Error
 	return records, err
 }
