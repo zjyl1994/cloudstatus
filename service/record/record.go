@@ -41,3 +41,12 @@ func WriteRecord(def *define.StatExchangeFormat) error {
 		return tx.CreateInBatches(ts, len(ts)).Error
 	})
 }
+
+func GetNetTraffic() ([]define.TrafficCalcResult, error) {
+	var results []define.TrafficCalcResult
+	err := vars.DB.Model(&define.MeasureRecord{}).
+		Select("node_id,SUM(net_send) AS net_send, SUM(net_recv) AS net_recv").
+		Group("node_id").
+		Find(&results).Error
+	return results, err
+}
