@@ -56,13 +56,22 @@ func Client(cmd *cobra.Command, args []string) {
 			continue
 		}
 
-		samples.NodeID = nodeId
-
-		slog.Debug("Measure", slog.Any("data", samples))
+		if nodeId == "" {
+			samples.NodeID = samples.Host.Hostname
+		} else {
+			samples.NodeID = nodeId
+		}
 
 		bJson, err := json.Marshal(samples)
 		if err != nil {
 			slog.Error("Marshal error", slog.String("err", err.Error()))
+			continue
+		}
+
+		slog.Debug("Measure", slog.Int("len", len(bJson)), slog.String("body", string(bJson)))
+
+		if reportUrl == "" { // remote url not set，print data
+			slog.Error("report url not set")
 			continue
 		}
 

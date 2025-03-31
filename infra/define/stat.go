@@ -25,8 +25,13 @@ type StatExchangeFormat struct {
 		Send uint64 `json:"sb"`
 		Recv uint64 `json:"rb"`
 	} `json:"network"`
-	Uptime      uint64             `json:"uptime"`
-	Hostname    string             `json:"hostname"`
+	Host struct {
+		Uptime   uint64 `json:"uptime"`
+		Hostname string `json:"hostname"`
+		Platform string `json:"platform"`
+		Version  string `json:"version"`
+		Arch     string `json:"arch"`
+	}
 	NodeID      string             `json:"node_id"`
 	Interval    uint64             `json:"interval"`
 	ReportTime  int64              `json:"report"`

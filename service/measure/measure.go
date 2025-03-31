@@ -111,8 +111,11 @@ func Measure(interval time.Duration, useSensors bool) (*define.StatExchangeForma
 	if err != nil {
 		return nil, err
 	}
-	result.Hostname = hostinfo.Hostname
-	result.Uptime = hostinfo.Uptime
+	result.Host.Hostname = hostinfo.Hostname
+	result.Host.Uptime = hostinfo.Uptime
+	result.Host.Platform = hostinfo.Platform
+	result.Host.Version = hostinfo.PlatformVersion
+	result.Host.Arch = hostinfo.KernelArch
 
 	// info
 	result.Interval = uint64(interval.Seconds())
