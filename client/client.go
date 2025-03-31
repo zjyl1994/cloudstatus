@@ -2,12 +2,12 @@ package client
 
 import (
 	"bytes"
-	"encoding/json"
 	"io"
 	"log/slog"
 	"net/http"
 	"time"
 
+	"github.com/fxamacker/cbor/v2"
 	"github.com/spf13/cobra"
 	"github.com/zjyl1994/cloudstatus/service/measure"
 )
@@ -62,25 +62,24 @@ func Client(cmd *cobra.Command, args []string) {
 			samples.NodeID = nodeId
 		}
 
-		bJson, err := json.Marshal(samples)
+		bCbor, err := cbor.Marshal(samples)
 		if err != nil {
 			slog.Error("Marshal error", slog.String("err", err.Error()))
 			continue
 		}
-
-		slog.Debug("Measure", slog.Int("len", len(bJson)), slog.String("body", string(bJson)))
+		slog.Debug("Measure", slog.Int("len", len(bCbor)), slog.Any("data", samples))
 
 		if reportUrl == "" { // remote url not set，print data
 			slog.Error("report url not set")
 			continue
 		}
 
-		hReq, err := http.NewRequest(http.MethodPost, reportUrl, bytes.NewReader(bJson))
+		hReq, err := http.NewRequest(http.MethodPost, reportUrl, bytes.NewReader(bCbor))
 		if err != nil {
 			slog.Error("New report error", slog.String("err", err.Error()))
 			continue
 		}
-		hReq.Header.Set("Content-Type", "application/json")
+		hReq.Header.Set("Content-Type", "application/cbor")
 		hReq.Header.Set("Authorization", "Bearer "+token)
 
 		hc := http.Client{Timeout: intdur}

@@ -17,6 +17,8 @@ require (
 require (
 	github.com/andybalholm/brotli v1.1.0 // indirect
 	github.com/ebitengine/purego v0.8.2 // indirect
+	github.com/fxamacker/cbor v1.5.1 // indirect
+	github.com/fxamacker/cbor/v2 v2.8.0 // indirect
 	github.com/go-ole/go-ole v1.2.6 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
@@ -37,6 +39,7 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.51.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
+	github.com/x448/float16 v0.8.4 // indirect
 	github.com/yusufpapurcu/wmi v1.2.4 // indirect
 	golang.org/x/sys v0.28.0 // indirect
 	golang.org/x/text v0.14.0 // indirect

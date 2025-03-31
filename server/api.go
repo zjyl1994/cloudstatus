@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/fxamacker/cbor/v2"
 	"github.com/gofiber/fiber/v2"
 	"github.com/zjyl1994/cloudstatus/infra/define"
 	"github.com/zjyl1994/cloudstatus/infra/rwmap"
@@ -32,7 +33,7 @@ func handleAPIReport(c *fiber.Ctx) error {
 	}
 	// parse data
 	var data define.StatExchangeFormat
-	err := c.BodyParser(&data)
+	err := cbor.Unmarshal(c.Body(), &data)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).SendString(err.Error())
 	}
