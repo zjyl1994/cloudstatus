@@ -47,7 +47,7 @@ func GetNetTraffic() ([]define.TrafficCalcResult, error) {
 
 func CleanRecord() error {
 	validNodeMap := make(map[string]struct{})
-	for _, node := range vars.Nodes {
+	for _, node := range vars.Config.Nodes {
 		validNodeMap[node.ID] = struct{}{}
 	}
 	validNodes := make([]string, 0, len(validNodeMap))
@@ -60,7 +60,7 @@ func CleanRecord() error {
 		if err != nil {
 			return err
 		}
-		for _, node := range vars.Nodes {
+		for _, node := range vars.Config.Nodes {
 			if node.ResetDay == currentDayInMonth {
 				err = tx.Where("node_id = ?", node.ID).Delete(&define.MeasureRecord{}).Error
 				if err != nil {

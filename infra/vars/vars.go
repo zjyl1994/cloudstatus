@@ -12,6 +12,5 @@ var (
 	DB               *gorm.DB
 	Config           define.ServerConfig
 	Listen           string
-	Nodes            []define.ServerNode
 	NodeAliveTimeout int
 )

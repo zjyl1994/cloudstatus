@@ -68,8 +68,8 @@ func handleOverview(c *fiber.Ctx) error {
 			tm[t.NodeId] = t
 		}
 		// get all node stat from cache
-		result := make([]define.StatExchangeFormat, 0, len(vars.Nodes))
-		for _, node := range vars.Nodes {
+		result := make([]define.StatExchangeFormat, 0, len(vars.Config.Nodes))
+		for _, node := range vars.Config.Nodes {
 			stat, ok := statCache.Get(node.ID)
 			if !ok {
 				result = append(result, define.StatExchangeFormat{
