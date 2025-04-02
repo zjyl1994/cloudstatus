@@ -61,8 +61,7 @@ func Server(cmd *cobra.Command, args []string) {
 		slog.Error("Unmarshal config", slog.String("err", err.Error()))
 		return
 	}
-	vars.Token = cfg.Token
-	vars.Nodes = cfg.Nodes
+	vars.Config = cfg
 
 	// init db
 	dbFile, err := cmd.Flags().GetString("db")

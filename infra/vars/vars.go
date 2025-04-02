@@ -10,7 +10,7 @@ var (
 	DebugMode        bool
 	App              *fiber.App
 	DB               *gorm.DB
-	Token            string
+	Config           define.ServerConfig
 	Listen           string
 	Nodes            []define.ServerNode
 	NodeAliveTimeout int

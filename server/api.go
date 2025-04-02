@@ -28,7 +28,7 @@ func handleAPIReport(c *fiber.Ctx) error {
 	authHeader := c.Get(fiber.HeaderAuthorization)
 	authHeader = strings.TrimPrefix(authHeader, "Bearer ")
 	authHeader = strings.TrimSpace(authHeader)
-	if authHeader != vars.Token {
+	if authHeader != vars.Config.Token {
 		return c.Status(fiber.StatusUnauthorized).SendString("Unauthorized")
 	}
 	// parse data
@@ -215,6 +215,15 @@ func handleCharts(c *fiber.Ctx) error {
 	return c.JSON(sresp)
 }
 
+type nodeResp struct {
+	Title string              `json:"title"`
+	Nodes []define.ServerNode `json:"nodes"`
+}
+
 func handleNodes(c *fiber.Ctx) error {
-	return c.JSON(vars.Nodes)
+	resp := nodeResp{
+		Title: vars.Config.Title,
+		Nodes: vars.Config.Nodes,
+	}
+	return c.JSON(resp)
 }

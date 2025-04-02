@@ -2,6 +2,7 @@ package define
 
 type ServerConfig struct {
 	Token string       `json:"token"`
+	Title string       `json:"title"`
 	Nodes []ServerNode `json:"nodes"`
 }
 
