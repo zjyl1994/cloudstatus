@@ -18,6 +18,6 @@ func init() {
 	clientCmd.Flags().String("report", "", "Remote report url")
 	clientCmd.Flags().String("node", "", "Node ID")
 	clientCmd.Flags().String("token", "", "Node token")
-	clientCmd.Flags().Int("interval", 5, "Report interval in seconds")
+	clientCmd.Flags().Int("interval", 60, "Report interval in seconds")
 	clientCmd.Flags().Bool("sensors", false, "Load tempature use lm-sensors")
 }

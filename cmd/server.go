@@ -17,5 +17,5 @@ func init() {
 	serverCmd.Flags().String("config", "config.json", "Config file")
 	serverCmd.Flags().String("listen", "127.0.0.1:10567", "Server listen address")
 	serverCmd.Flags().String("db", "cloudstatus.db", "Database file")
-	serverCmd.Flags().Int("alive", 60, "Alive time for nodes")
+	serverCmd.Flags().Int("alive", 180, "Alive time for nodes")
 }
