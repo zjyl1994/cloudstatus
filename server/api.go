@@ -214,3 +214,7 @@ func handleCharts(c *fiber.Ctx) error {
 
 	return c.JSON(sresp)
 }
+
+func handleNodes(c *fiber.Ctx) error {
+	return c.JSON(vars.Nodes)
+}

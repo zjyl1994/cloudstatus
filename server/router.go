@@ -18,6 +18,7 @@ func Start(listen string) error {
 		apiG.Post("/report", handleAPIReport)
 		apiG.Get("/overview", handleOverview)
 		apiG.Get("/charts", handleCharts)
+		apiG.Get("/nodes", handleNodes)
 	}
 	return app.Listen(listen)
 }
