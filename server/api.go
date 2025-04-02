@@ -221,8 +221,12 @@ type nodeResp struct {
 }
 
 func handleNodes(c *fiber.Ctx) error {
+	title := vars.Config.Title
+	if title == "" {
+		title = "Cloudstatus"
+	}
 	resp := nodeResp{
-		Title: vars.Config.Title,
+		Title: title,
 		Nodes: vars.Config.Nodes,
 	}
 	return c.JSON(resp)
