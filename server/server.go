@@ -78,7 +78,7 @@ func Server(cmd *cobra.Command, args []string) {
 		slog.Error("Open database", slog.String("err", err.Error()))
 		return
 	}
-	err = vars.DB.Exec("PRAGMA journal_mode=WAL;PRAGMA wal_autocheckpoint=1000;").Error
+	err = vars.DB.Exec("PRAGMA journal_mode=WAL;").Error
 	if err != nil {
 		slog.Error("Switch to WAL", slog.String("err", err.Error()))
 		return
