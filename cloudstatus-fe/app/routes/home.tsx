@@ -1,7 +1,7 @@
 import type { Route } from "./+types/home";
 import { Container, Table, ProgressBar } from "react-bootstrap";
 import { useState, useEffect } from "react";
-import { Memory, HddFill, Ethernet, Thermometer, Cpu, Hdd, Download, Upload, Database, CloudArrowDown, CloudArrowUp } from "react-bootstrap-icons";
+import { Memory, HddFill, Ethernet, Diamond, Cpu, Hdd, Download, Upload, CloudArrowDown, CloudArrowUp } from "react-bootstrap-icons";
 import ReactCountryFlag from "react-country-flag";
 
 interface Overview {
@@ -104,7 +104,11 @@ export default function Home() {
       <Table hover responsive>
         <thead>
           <tr>
-            <th>节点</th>
+            <th>
+              <div className="d-flex align-items-center gap-2">
+                <Diamond /> 节点
+              </div>
+            </th>
 
             <th>
               <div className="d-flex align-items-center gap-2">
@@ -118,12 +122,12 @@ export default function Home() {
             </th>
             <th>
               <div className="d-flex align-items-center gap-2">
-              <Hdd /> 交换
+                <Hdd /> 交换
               </div>
             </th>
             <th>
               <div className="d-flex align-items-center gap-2">
-               <HddFill /> 磁盘
+                <HddFill /> 磁盘
               </div>
             </th>
             <th>
@@ -131,56 +135,48 @@ export default function Home() {
                 <Ethernet /> 网络
               </div>
             </th>
-            <th>
-              <span title="节点状态">状态</span>
-            </th>
           </tr>
         </thead>
         <tbody>
           {overview.nodes.map((node) => (
             <tr key={node.node_id}>
               <td>
-                <div className="d-flex align-items-center">
+                <div className="d-flex align-items-center gap-2">
                   <ReactCountryFlag countryCode={node.metadata.location} className="me-2" svg />
-                  {node.metadata.label || node.Host.hostname}
-                </div>
-              </td>
-
-              <td>
-                <div className="d-flex flex-column gap-2">
-                  <ProgressBar striped now={node.percent.cpu} label={`${node.percent.cpu.toFixed(2)}%`} />
-                  <span>{node.load.load1.toFixed(2)} / {node.load.load5.toFixed(2)} / {node.load.load15.toFixed(2)}</span>
-                </div>
-              </td>
-              <td>
-                <div className="d-flex flex-column gap-2">
-                  <ProgressBar striped now={node.percent.mem} label={`${node.percent.mem.toFixed(2)}%`} />
-                  <span>{formatBytes(node.memory.used)}/{formatBytes(node.memory.total)}</span>
-                </div>
-              </td>
-              <td>
-                <div className="d-flex flex-column gap-2">
-                  <ProgressBar striped now={node.percent.swap} label={`${node.percent.swap.toFixed(2)}%`} />
-                  <span>{formatBytes(node.swap.used)}/{formatBytes(node.swap.total)}</span>
-                </div>
-              </td>
-              <td>
-                <div className="d-flex flex-column gap-2">
-                  <ProgressBar striped now={node.percent.disk} label={`${node.percent.disk.toFixed(2)}%`} />
-                  <span><Upload className="me-1"/>{formatBytes(node.disk.rx)}/s <Download className="me-1"/>{formatBytes(node.disk.wx)}/s</span>
-                </div>
-              </td>
-              <td>
-                <div className="d-flex flex-column gap-2">
-                  <span><CloudArrowDown className="me-1" />{formatBytes(node.network.rb)} <CloudArrowUp className="me-1" />{formatBytes(node.network.sb)}</span>
-                  <span><Download className="me-1"/>{formatBytes(node.network.rx)}/s <Upload className="me-1"/>{formatBytes(node.network.tx)}/s</span>
-                </div>
-              </td>
-              <td>
-                <div className="d-flex align-items-center">
+                  <span className="me-2">{node.metadata.label || node.Host.hostname}</span>
                   <span className={`badge rounded-pill ${node.node_alive ? 'bg-success' : 'bg-danger'}`} title={`${Math.floor(node.Host.uptime / 3600)}小时${Math.floor((node.Host.uptime % 3600) / 60)}分钟`}>
                     {node.node_alive ? '在线' : '离线'}
                   </span>
+                </div>
+              </td>
+              <td>
+                <div className="d-flex flex-column gap-2">
+                  <ProgressBar striped now={node.percent.cpu} variant={node.percent.cpu < 50 ? 'success' : node.percent.cpu < 80 ? 'warning' : 'danger'} className="mb-0" />
+                  <span className="text-nowrap">{node.load.load1.toFixed(2)} / {node.load.load5.toFixed(2)} / {node.load.load15.toFixed(2)}</span>
+                </div>
+              </td>
+              <td>
+                <div className="d-flex flex-column gap-2">
+                  <ProgressBar striped now={node.percent.mem} variant={node.percent.mem < 50 ? 'success' : node.percent.mem < 80 ? 'warning' : 'danger'} className="mb-0" />
+                  <span className="text-nowrap">{formatBytes(node.memory.used)}/{formatBytes(node.memory.total)}</span>
+                </div>
+              </td>
+              <td>
+                <div className="d-flex flex-column gap-2">
+                  <ProgressBar striped now={node.percent.swap} variant={node.percent.swap < 50 ? 'success' : node.percent.swap < 80 ? 'warning' : 'danger'} className="mb-0" />
+                  <span className="text-nowrap">{formatBytes(node.swap.used)}/{formatBytes(node.swap.total)}</span>
+                </div>
+              </td>
+              <td>
+                <div className="d-flex flex-column gap-2">
+                  <ProgressBar striped now={node.percent.disk} variant={node.percent.disk < 50 ? 'success' : node.percent.disk < 80 ? 'warning' : 'danger'} className="mb-0" />
+                  <span>{formatBytes(node.disk.rx)}/s {formatBytes(node.disk.wx)}/s</span>
+                </div>
+              </td>
+              <td>
+                <div className="d-flex flex-column gap-2">
+                  <span>{formatBytes(node.network.rb)} {formatBytes(node.network.sb)}</span>
+                  <span>{formatBytes(node.network.rx)}/s {formatBytes(node.network.tx)}/s</span>
                 </div>
               </td>
             </tr>
