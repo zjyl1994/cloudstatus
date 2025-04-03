@@ -29,6 +29,12 @@ importers:
       react-bootstrap:
         specifier: ^2.10.9
         version: 2.10.9(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react-bootstrap-icons:
+        specifier: ^1.11.5
+        version: 1.11.5(react@19.1.0)
+      react-country-flag:
+        specifier: ^3.1.0
+        version: 3.1.0(react@19.1.0)
       react-dom:
         specifier: ^19.0.0
         version: 19.1.0(react@19.1.0)
@@ -1906,6 +1912,11 @@ packages:
     resolution: {integrity: sha512-8zGqypfENjCIqGhgXToC8aB2r7YrBX+AQAfIPs/Mlk+BtPTztOvTS01NRW/3Eh60J+a48lt8qsCzirQ6loCVfA==}
     engines: {node: '>= 0.8'}
 
+  react-bootstrap-icons@1.11.5:
+    resolution: {integrity: sha512-eOhtFJMUqw98IJcfKJsSMZkFHCeNPTTwXZAe9V9d4mT22ARmbrISxPO9GmtWWuf72zQctLeZMGodX/q6wrbYYg==}
+    peerDependencies:
+      react: '>=16.8.6'
+
   react-bootstrap@2.10.9:
     resolution: {integrity: sha512-TJUCuHcxdgYpOqeWmRApM/Dy0+hVsxNRFvq2aRFQuxhNi/+ivOxC5OdWIeHS3agxvzJ4Ev4nDw2ZdBl9ymd/JQ==}
     peerDependencies:
@@ -1915,6 +1926,12 @@ packages:
     peerDependenciesMeta:
       '@types/react':
         optional: true
+
+  react-country-flag@3.1.0:
+    resolution: {integrity: sha512-JWQFw1efdv9sTC+TGQvTKXQg1NKbDU2mBiAiRWcKM9F1sK+/zjhP2yGmm8YDddWyZdXVkR8Md47rPMJmo4YO5g==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      react: '>=16'
 
   react-d3-tree@3.6.6:
     resolution: {integrity: sha512-E9ByUdeqvlxLlF9BSL7KWQH3ikYHtHO+g1rAPcVgj6mu92tjRUCan2AWxoD4eTSzzAATf8BZtf+CXGSoSd6ioQ==}
@@ -4140,6 +4157,11 @@ snapshots:
       iconv-lite: 0.4.24
       unpipe: 1.0.0
 
+  react-bootstrap-icons@1.11.5(react@19.1.0):
+    dependencies:
+      prop-types: 15.8.1
+      react: 19.1.0
+
   react-bootstrap@2.10.9(@types/react@19.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:
       '@babel/runtime': 7.27.0
@@ -4159,6 +4181,10 @@ snapshots:
       warning: 4.0.3
     optionalDependencies:
       '@types/react': 19.1.0
+
+  react-country-flag@3.1.0(react@19.1.0):
+    dependencies:
+      react: 19.1.0
 
   react-d3-tree@3.6.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
     dependencies:
