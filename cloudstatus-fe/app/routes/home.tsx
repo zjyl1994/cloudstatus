@@ -1,7 +1,7 @@
 import type { Route } from "./+types/home";
-import { Container, Table, ProgressBar } from "react-bootstrap";
+import { Container, Card, Row, Col, ProgressBar } from "react-bootstrap";
 import { useState, useEffect } from "react";
-import { Memory, HddFill, Ethernet, Diamond, Cpu, Hdd, Download, Upload, CloudArrowDown, CloudArrowUp } from "react-bootstrap-icons";
+import { Memory, HddFill, Ethernet, Diamond, Cpu, Hdd, Download, Upload, CloudArrowDown, CloudArrowUp, Ubuntu } from "react-bootstrap-icons";
 import ReactCountryFlag from "react-country-flag";
 
 interface Overview {
@@ -101,88 +101,127 @@ export default function Home() {
 
   return (
     <Container className="py-2">
-      <Table hover responsive>
-        <thead>
-          <tr>
-            <th>
-              <div className="d-flex align-items-center gap-2">
-                <Diamond /> 节点
-              </div>
-            </th>
-
-            <th>
-              <div className="d-flex align-items-center gap-2">
-                <Cpu /> CPU 负载
-              </div>
-            </th>
-            <th>
-              <div className="d-flex align-items-center gap-2">
-                <Memory /> 内存
-              </div>
-            </th>
-            <th>
-              <div className="d-flex align-items-center gap-2">
-                <Hdd /> 交换
-              </div>
-            </th>
-            <th>
-              <div className="d-flex align-items-center gap-2">
-                <HddFill /> 磁盘
-              </div>
-            </th>
-            <th>
-              <div className="d-flex align-items-center gap-2">
-                <Ethernet /> 网络
-              </div>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {overview.nodes.map((node) => (
-            <tr key={node.node_id}>
-              <td>
-                <div className="d-flex align-items-center gap-2">
-                  <ReactCountryFlag countryCode={node.metadata.location} className="me-2" svg />
-                  <span className="me-2">{node.metadata.label || node.Host.hostname}</span>
-                  <span className={`badge rounded-pill ${node.node_alive ? 'bg-success' : 'bg-danger'}`} title={`${Math.floor(node.Host.uptime / 3600)}小时${Math.floor((node.Host.uptime % 3600) / 60)}分钟`}>
+      <Row xs={1} md={2} lg={3} className="g-4">
+        {overview.nodes.map((node) => (
+          <Col key={node.node_id}>
+            <Card>
+              <Card.Header>
+                <div className="d-flex align-items-center justify-content-between">
+                  <div className="d-flex align-items-center gap-2">
+                    <ReactCountryFlag countryCode={node.metadata.location} svg />
+                    <span>{node.metadata.label || node.Host.hostname}</span>
+                  </div>
+                  <span
+                    className={`badge rounded-pill ${node.node_alive ? 'bg-success' : 'bg-danger'}`}
+                    title={node.node_alive ? `${node.Host.uptime >= 86400 ?
+                      `${Math.floor(node.Host.uptime / 86400)}天` :
+                      node.Host.uptime >= 3600 ?
+                        `${Math.floor(node.Host.uptime / 3600)}小时` :
+                        `${Math.floor(node.Host.uptime / 60)}分钟`
+                      }` : '离线'}
+                  >
                     {node.node_alive ? '在线' : '离线'}
                   </span>
                 </div>
-              </td>
-              <td>
-                <div className="d-flex flex-column gap-2">
-                  <ProgressBar striped now={node.percent.cpu} variant={node.percent.cpu < 50 ? 'success' : node.percent.cpu < 80 ? 'warning' : 'danger'} className="mb-0" />
-                  <span className="text-nowrap">{node.load.load1.toFixed(2)} / {node.load.load5.toFixed(2)} / {node.load.load15.toFixed(2)}</span>
+              </Card.Header>
+              <Card.Body>
+                <div className="mb-3">
+                  <div className="d-flex align-items-center gap-2 mb-1">
+                    <Cpu /> <small>CPU使用率</small>
+                  </div>
+                  <ProgressBar
+                    striped
+                    now={node.percent.cpu}
+                    variant={node.percent.cpu < 50 ? 'success' : node.percent.cpu < 80 ? 'warning' : 'danger'}
+                    label={`${node.percent.cpu.toFixed(2)}%`}
+                  />
                 </div>
-              </td>
-              <td>
-                <div className="d-flex flex-column gap-2">
-                  <ProgressBar striped now={node.percent.mem} variant={node.percent.mem < 50 ? 'success' : node.percent.mem < 80 ? 'warning' : 'danger'} className="mb-0" />
-                  <span className="text-nowrap">{formatBytes(node.memory.used)}/{formatBytes(node.memory.total)}</span>
+
+                <div className="mb-3">
+                  <div className="d-flex align-items-center gap-2 mb-1">
+                    <Memory /> <small>内存使用率</small>
+                  </div>
+                  <ProgressBar
+                    striped
+                    now={node.percent.mem}
+                    variant={node.percent.mem < 50 ? 'success' : node.percent.mem < 80 ? 'warning' : 'danger'}
+                    label={`${node.percent.mem.toFixed(2)}%`}
+                  />
                 </div>
-              </td>
-              <td>
-                <div className="d-flex flex-column gap-2">
-                  <ProgressBar striped now={node.percent.swap} variant={node.percent.swap < 50 ? 'success' : node.percent.swap < 80 ? 'warning' : 'danger'} className="mb-0" />
-                  <span className="text-nowrap">{formatBytes(node.swap.used)}/{formatBytes(node.swap.total)}</span>
+
+                <div className="mb-3">
+                  <div className="d-flex align-items-center gap-2 mb-1">
+                    <Diamond /> <small>SWAP使用率</small>
+                  </div>
+                  <ProgressBar
+                    striped
+                    now={node.percent.swap}
+                    variant={node.percent.swap < 50 ? 'success' : node.percent.swap < 80 ? 'warning' : 'danger'}
+                    label={`${node.percent.swap.toFixed(2)}%`}
+                  />
                 </div>
-              </td>
-              <td>
-                <div className="d-flex flex-column gap-2">
-                  <ProgressBar striped now={node.percent.disk} variant={node.percent.disk < 50 ? 'success' : node.percent.disk < 80 ? 'warning' : 'danger'} className="mb-0" />
-                  <span>{formatBytes(node.disk.rx)}/s {formatBytes(node.disk.wx)}/s</span>
+
+                <div className="mb-3">
+                  <div className="d-flex align-items-center gap-2 mb-1">
+                    <HddFill /> <small>存储使用率</small>
+                  </div>
+                  <ProgressBar
+                    striped
+                    now={node.percent.disk}
+                    variant={node.percent.disk < 50 ? 'success' : node.percent.disk < 80 ? 'warning' : 'danger'}
+                    label={`${node.percent.disk.toFixed(2)}%`}
+                  />
                 </div>
-              </td>
-              <td>
-                <div className="d-flex flex-column gap-2">
-                  <span>{formatBytes(node.network.rb)} {formatBytes(node.network.sb)}</span>
-                  <span>{formatBytes(node.network.rx)}/s {formatBytes(node.network.tx)}/s</span>
+
+                <div className="d-flex justify-content-between mb-2">
+                  <div>
+                    <div className="d-flex align-items-center gap-1">
+                      <Upload className="text-success" /> <small>上传</small>
+                    </div>
+                    <div>{formatBytes(node.network.tx)}/s</div>
+                  </div>
+                  <div>
+                    <div className="d-flex align-items-center gap-1">
+                      <Download className="text-primary" /> <small>下载</small>
+                    </div>
+                    <div>{formatBytes(node.network.rx)}/s</div>
+                  </div>
                 </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+
+                <div className="d-flex justify-content-between mb-2">
+                  <div>
+                    <div className="d-flex align-items-center gap-1">
+                      <CloudArrowUp className="text-success" /> <small>月上传</small>
+                    </div>
+                    <div>{formatBytes(node.network.sb)}</div>
+                  </div>
+                  <div>
+                    <div className="d-flex align-items-center gap-1">
+                      <CloudArrowDown className="text-primary" /> <small>月下载</small>
+                    </div>
+                    <div>{formatBytes(node.network.rb)}</div>
+                  </div>
+                </div>
+
+                <div className="d-flex justify-content-between">
+                  <div>
+                    <div className="d-flex align-items-center gap-1">
+                      <Hdd className="text-success" /> <small>磁盘写入</small>
+                    </div>
+                    <div>{formatBytes(node.disk.wx)}/s</div>
+                  </div>
+                  <div>
+                    <div className="d-flex align-items-center gap-1">
+                      <Hdd className="text-primary" /> <small>磁盘读取</small>
+                    </div>
+                    <div>{formatBytes(node.disk.rx)}/s</div>
+                  </div>
+                </div>
+              </Card.Body>
+            </Card>
+          </Col>
+        ))}
+      </Row>
     </Container>
   );
 }
