@@ -81,7 +81,7 @@ export default function App() {
 
   return (
     <Layout title={title}>
-      <Navbar bg="dark" variant="dark" expand="lg">
+      <Navbar bg="dark" variant="dark" expand="lg" fixed="top">
         <Container>
           <Navbar.Brand as={Link} to="/">{title}</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -102,12 +102,14 @@ export default function App() {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      {error && (
-        <div className="alert alert-danger" role="alert">
-          {error}
-        </div>
-      )}
-      <Outlet />
+      <div style={{ paddingTop: '56px' }}>
+        {error && (
+          <div className="alert alert-danger" role="alert">
+            {error}
+          </div>
+        )}
+        <Outlet />
+      </div>
     </Layout>
   );
 }
