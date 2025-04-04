@@ -87,14 +87,16 @@ export default function App() {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link as={Link} to="/" active={location.pathname === "/"}>总览</Nav.Link>
+              <Nav.Link as={Link} to="/" active={location.pathname === "/"}>概览</Nav.Link>
               {nodes.map((node) => (
-                <Nav.Link 
-                  key={node.id} 
-                  as={Link} 
-                  to={`/${node.id}`}
-                  active={location.pathname === `/${node.id}`}
-                >{node.label}</Nav.Link>
+                <>
+                  <Nav.Link 
+                    key={`${node.id}`} 
+                    as={Link} 
+                    to={`/${node.id}`}
+                    active={location.pathname === `/${node.id}`}
+                  >{node.label}</Nav.Link>
+                </>
               ))}
             </Nav>
           </Navbar.Collapse>
