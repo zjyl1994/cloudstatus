@@ -91,7 +91,7 @@ export default function Home() {
     };
 
     fetchData();
-    const interval = setInterval(fetchData, 2000);
+    const interval = setInterval(fetchData, 30000);// 半分钟刷新一次
     return () => clearInterval(interval);
   }, []);
 

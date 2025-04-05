@@ -58,7 +58,7 @@ export default function Charts() {
 
         if (nodeId) {
             fetchData();
-            const interval = setInterval(fetchData, 60000); // 每分钟更新一次
+            const interval = setInterval(fetchData, 30000); // 半分钟更新一次
             return () => clearInterval(interval);
         }
     }, []);
