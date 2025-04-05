@@ -2,7 +2,10 @@ TARGET=cloudstatus
 
 UPX := $(shell command -v upx 2>/dev/null)
 
-all: build compress
+all: frontend build compress
+
+frontend:
+	cd cloudstatus-fe && pnpm install && pnpm build
 
 build:
 	go build -ldflags "-s -w" -o $(TARGET) .
