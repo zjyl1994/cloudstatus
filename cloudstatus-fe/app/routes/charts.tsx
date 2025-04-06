@@ -61,7 +61,7 @@ export default function Charts() {
             const interval = setInterval(fetchData, 30000); // 半分钟更新一次
             return () => clearInterval(interval);
         }
-    }, []);
+    }, [nodeId]);
 
     useEffect(() => {
         if (!data) return;
@@ -72,8 +72,18 @@ export default function Charts() {
             chart.setOption({
                 title: { text: 'CPU使用率' },
                 tooltip: { trigger: 'axis' },
+                grid: { left: '10%' },
                 xAxis: { type: 'category', data: data.cpu.map(item => item.time) },
-                yAxis: { type: 'value', min: 0, max: 100, name: '%' },
+                yAxis: { 
+                    type: 'value', 
+                    min: 0, 
+                    max: 100, 
+                    name: '%',
+                    axisLabel: {
+                        width: 50,
+                        overflow: 'break'
+                    }
+                },
                 series: [{
                     name: 'CPU',
                     type: 'line',
@@ -89,8 +99,18 @@ export default function Charts() {
             chart.setOption({
                 title: { text: '内存使用率' },
                 tooltip: { trigger: 'axis' },
+                grid: { left: '10%' },
                 xAxis: { type: 'category', data: data.memory.map(item => item.time) },
-                yAxis: { type: 'value', min: 0, max: 100, name: '%' },
+                yAxis: { 
+                    type: 'value', 
+                    min: 0, 
+                    max: 100, 
+                    name: '%',
+                    axisLabel: {
+                        width: 50,
+                        overflow: 'break'
+                    }
+                },
                 series: [{
                     name: '内存',
                     type: 'line',
@@ -107,8 +127,15 @@ export default function Charts() {
             chart.setOption({
                 title: { text: '系统负载' },
                 tooltip: { trigger: 'axis' },
+                grid: { left: '10%' },
                 xAxis: { type: 'category', data: data.load.map(item => item.time) },
-                yAxis: { type: 'value' },
+                yAxis: { 
+                    type: 'value',
+                    axisLabel: {
+                        width: 50,
+                        overflow: 'break'
+                    }
+                },
                 series: [
                     {
                         name: '1分钟',
@@ -135,8 +162,18 @@ export default function Charts() {
             chart.setOption({
                 title: { text: '交换分区使用率' },
                 tooltip: { trigger: 'axis' },
+                grid: { left: '10%' },
                 xAxis: { type: 'category', data: data.swap.map(item => item.time) },
-                yAxis: { type: 'value', min: 0, max: 100, name: '%' },
+                yAxis: { 
+                    type: 'value', 
+                    min: 0, 
+                    max: 100, 
+                    name: '%',
+                    axisLabel: {
+                        width: 50,
+                        overflow: 'break'
+                    }
+                },
                 series: [{
                     name: '交换分区',
                     type: 'line',
@@ -152,10 +189,13 @@ export default function Charts() {
             chart.setOption({
                 title: { text: '磁盘IO' },
                 tooltip: { trigger: 'axis' },
+                grid: { left: '15%' },
                 xAxis: { type: 'category', data: data.disk_speed.map(item => item.time) },
                 yAxis: { 
                     type: 'value',
                     axisLabel: {
+                        width: 80,
+                        overflow: 'break',
                         formatter: (value: number) => formatBytes(value) + '/s'
                     }
                 },
@@ -188,10 +228,13 @@ export default function Charts() {
             chart.setOption({
                 title: { text: '网络IO' },
                 tooltip: { trigger: 'axis' },
+                grid: { left: '15%' },
                 xAxis: { type: 'category', data: data.net_speed.map(item => item.time) },
                 yAxis: { 
                     type: 'value',
                     axisLabel: {
+                        width: 80,
+                        overflow: 'break',
                         formatter: (value: number) => formatBytes(value) + '/s'
                     }
                 },
@@ -230,12 +273,20 @@ export default function Charts() {
             chart.setOption({
                 title: { text: '温度监控' },
                 tooltip: { trigger: 'axis' },
+                grid: { left: '10%' },
                 legend: { data: Object.keys(data.temperature) },
                 xAxis: {
                     type: 'category',
                     data: Object.values(data.temperature)[0].map(item => item.time)
                 },
-                yAxis: { type: 'value', name: '°C' },
+                yAxis: { 
+                    type: 'value', 
+                    name: '°C',
+                    axisLabel: {
+                        width: 50,
+                        overflow: 'break'
+                    }
+                },
                 series
             });
         }
