@@ -30,6 +30,7 @@ func Start(listen string) error {
 		PathPrefix:   "build/client",
 		Index:        "index.html",
 		NotFoundFile: "build/client/index.html",
+		MaxAge:       60 * 60 * 24 * 7,
 	}))
 	return app.Listen(listen)
 }
