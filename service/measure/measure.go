@@ -96,16 +96,30 @@ func Measure(interval time.Duration, useSensors bool) (*define.StatExchangeForma
 	}
 	result.Percent.Swap = sm.UsedPercent
 
-	diskUsage, err := disk.Usage("/")
+	partitions, err := disk.Partitions(false)
 	if err != nil {
 		return nil, err
 	}
-	result.Disk.UsageStat = define.UsageStat{
-		Total: diskUsage.Total,
-		Used:  diskUsage.Used,
-		Free:  diskUsage.Free,
+
+	var totalSize, usedSize, freeSize uint64
+	for _, partition := range partitions {
+		diskUsage, diskErr := disk.Usage(partition.Mountpoint)
+		if diskErr != nil {
+			return nil, diskErr
+		}
+		totalSize += diskUsage.Total
+		usedSize += diskUsage.Used
+		freeSize += diskUsage.Free
 	}
-	result.Percent.Disk = diskUsage.UsedPercent
+
+	result.Disk.UsageStat = define.UsageStat{
+		Total: totalSize,
+		Used:  usedSize,
+		Free:  freeSize,
+	}
+	if totalSize > 0 {
+		result.Percent.Disk = float64(usedSize) / float64(totalSize) * 100
+	}
 	// host info
 	hostinfo, err := host.Info()
 	if err != nil {
