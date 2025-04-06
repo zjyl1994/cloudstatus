@@ -101,7 +101,7 @@ export default function Home() {
 
   return (
     <Container className="py-2">
-      <Row xs={1} md={2} lg={3} className="g-4">
+      <Row xs={1} md={2} lg={4} className="g-3">
         {overview.nodes.map((node) => (
           <Col key={node.node_id}>
             <Card>
