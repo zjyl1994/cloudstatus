@@ -1,5 +1,5 @@
 import type { Route } from "./+types/home";
-import { Container, Card, Row, Col, ProgressBar } from "react-bootstrap";
+import { Container, Card, Row, Col, ProgressBar, Spinner } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import { Memory, HddFill, ArrowLeftRight, Diamond, Cpu, Hdd, Download, Upload, CloudArrowDown, CloudArrowUp, ThermometerHalf, Clock } from "react-bootstrap-icons";
 import ReactCountryFlag from "react-country-flag";
@@ -96,7 +96,13 @@ export default function Home() {
   }, []);
 
   if (!overview || overview.nodes.length === 0) {
-    return <div>Loading...</div>;
+    return (
+      <Container fluid className="py-3 d-flex justify-content-center align-items-center" style={{ minHeight: '200px' }}>
+        <Spinner animation="border" role="status" variant="primary">
+          <span className="visually-hidden">加载中...</span>
+        </Spinner>
+      </Container>
+    );
   }
 
   return (

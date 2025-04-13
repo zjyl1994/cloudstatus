@@ -1,5 +1,5 @@
 import type { Route } from "./+types/charts";
-import { Container, Card, Row, Col } from "react-bootstrap";
+import { Container, Card, Row, Col, Spinner } from "react-bootstrap";
 import { useState, useEffect, useRef } from "react";
 import * as echarts from "echarts";
 
@@ -309,11 +309,17 @@ export default function Charts() {
     }
 
     if (!data) {
-        return <Container fluid className="py-3"><div>Loading...</div></Container>;
+        return (
+            <Container fluid className="py-3 d-flex justify-content-center align-items-center" style={{ minHeight: '200px' }}>
+                <Spinner animation="border" role="status" variant="primary">
+                    <span className="visually-hidden">加载中...</span>
+                </Spinner>
+            </Container>
+        );
     }
 
     return (
-        <Container fluid className="py-3">
+        <Container className="mt-3">
             <Row>
                 <Col md={6} className="mb-3">
                     <Card>
