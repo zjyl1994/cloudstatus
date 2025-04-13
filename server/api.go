@@ -89,6 +89,17 @@ func handleOverview(c *fiber.Ctx) error {
 				stat.Network.Recv = td.NetRecv
 			}
 
+			// format float values
+			stat.Percent.CPU = formatFloat(stat.Percent.CPU)
+			stat.Percent.Mem = formatFloat(stat.Percent.Mem)
+			stat.Percent.Swap = formatFloat(stat.Percent.Swap)
+			stat.Load.Load1 = formatFloat(stat.Load.Load1)
+			stat.Load.Load5 = formatFloat(stat.Load.Load5)
+			stat.Load.Load15 = formatFloat(stat.Load.Load15)
+			if stat.Temperature != nil {
+				stat.Temperature = formatFloatMap(stat.Temperature)
+			}
+
 			result = append(result, stat)
 		}
 
@@ -168,15 +179,15 @@ func handleCharts(c *fiber.Ctx) error {
 			dateTime := time.Unix(mr.Timestamp, 0).Format(time.DateTime)
 			resp.CPU = append(resp.CPU, ChartsPercentItem{
 				DateTime: dateTime,
-				Value:    mr.CPU,
+				Value:    formatFloat(mr.CPU),
 			})
 			resp.Memory = append(resp.Memory, ChartsPercentItem{
 				DateTime: dateTime,
-				Value:    mr.Memory,
+				Value:    formatFloat(mr.Memory),
 			})
 			resp.Swap = append(resp.Swap, ChartsPercentItem{
 				DateTime: dateTime,
-				Value:    mr.Swap,
+				Value:    formatFloat(mr.Swap),
 			})
 			resp.DiskSpeed = append(resp.DiskSpeed, ChartsSpeedItem{
 				DateTime: dateTime,
@@ -190,13 +201,14 @@ func handleCharts(c *fiber.Ctx) error {
 			})
 			resp.Load = append(resp.Load, ChartsLoadItem{
 				DateTime: dateTime,
-				Load1:    mr.Load1,
-				Load5:    mr.Load5,
-				Load15:   mr.Load15,
+				Load1:    formatFloat(mr.Load1),
+				Load5:    formatFloat(mr.Load5),
+				Load15:   formatFloat(mr.Load15),
 			})
 			var tempMap map[string]float64
 			err = json.Unmarshal([]byte(mr.Temperature), &tempMap)
 			if err == nil {
+				tempMap = formatFloatMap(tempMap)
 				for k, v := range tempMap {
 					resp.Temperature[k] = append(resp.Temperature[k], ChartsPercentItem{
 						DateTime: dateTime,
